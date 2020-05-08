@@ -23,10 +23,10 @@ public class BDAsesoria implements BD {
      * @param idUsuario 
      * @return
      */
-    public static Asesoria buscarIdUsuario(String idUsuario) {
+    public static Asesoria[] buscarIdUsuario(String idUsuario) {
         // TODO implement here
         ResultSet rs;
-        Asesoria a = null;
+        Asesoria[] a = null;
         
         try{
             //Conectar a la bd
@@ -40,11 +40,22 @@ public class BDAsesoria implements BD {
                 
                 rs = ps.executeQuery();
                 
-                if(rs.next()){
-                    a = new Asesoria(rs.getString(1));
-                    a.setIdUsuario(rs.getString(2));
-                    a.setIdMateria(rs.getByte(3));
-                    a.setCosto(rs.getString(4));
+                //Aqui cambia porque puede haber varias asesorias de un mismo usuario
+                int i = 0;
+                //Descubrimos la longitud de la consulta
+                while(rs.next()){
+                    i++;
+                }
+                //Instanciamos el aarray con la longitud que hay
+                a = new Asesoria[i];
+                //Instanciamos cada objeto
+                for(int n = 0; n < i; n++){
+                    if(rs.previous()){
+                        a[n] = new Asesoria(rs.getString(1));
+                        a[n].setIdUsuario(rs.getString(2));
+                        a[n].setIdMateria(rs.getByte(3));
+                        a[n].setCosto(rs.getString(4));
+                    }
                 }
                 rs.close();
             }catch(SQLException es){
@@ -66,10 +77,10 @@ public class BDAsesoria implements BD {
      * @param idMateria 
      * @return
      */
-    public static Asesoria buscarMateria(String idMateria) {
+    public static Asesoria[] buscarIdMateria(String idMateria) {
         // TODO implement here
         ResultSet rs;
-        Asesoria a = null;
+        Asesoria[] a = null;
         
         try{
             //Conectar a la bd
@@ -83,11 +94,18 @@ public class BDAsesoria implements BD {
                 
                 rs = ps.executeQuery();
                 
-                if(rs.next()){
-                    a = new Asesoria(rs.getString(1));
-                    a.setIdUsuario(rs.getString(2));
-                    a.setIdMateria(rs.getByte(3));
-                    a.setCosto(rs.getString(4));
+                int i = 0;
+                while(rs.next()){i++;}
+                
+                a = new Asesoria[i];
+                
+                for(int n = 0; n < i; n++){
+                    if(rs.previous()){
+                        a[n] = new Asesoria(rs.getString(1));
+                        a[n].setIdUsuario(rs.getString(2));
+                        a[n].setIdMateria(rs.getByte(3));
+                        a[n].setCosto(rs.getString(4));
+                    }
                 }
                 rs.close();
             }catch(SQLException es){
@@ -97,7 +115,6 @@ public class BDAsesoria implements BD {
                 ps.close();
                 conBD.close();
             }
-            
         }catch(Exception e){
             System.out.println(e.getMessage());
             System.out.println(e.getStackTrace());

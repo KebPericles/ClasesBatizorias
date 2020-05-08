@@ -23,18 +23,104 @@ public class BDAsesoriaGuardada implements BD {
      * @param idUsuario 
      * @return
      */
-    public static AsesoriaGuardada buscarIdUsuario(String idUsuario) {
+    public static AsesoriaGuardada[] buscarIdUsuario(String idUsuario) {
         // TODO implement here
-        return null;
+        ResultSet rs;
+        AsesoriaGuardada[] ag = null;
+        
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "SELECT * FROM asesoriasGuardadas WHERE idUsuario = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, idUsuario);
+                
+                rs = ps.executeQuery();
+                int i = 0;
+                while(rs.next()){
+                    i++;
+                }
+                //Instanciamos el array con la longitud que hay
+                ag = new AsesoriaGuardada[i];
+                
+                for(int n = 0; n < i; n++){
+                    if(rs.previous()){
+                        ag[n] = new AsesoriaGuardada(rs.getString(1));
+                        ag[n].setIdUsuario(rs.getString(2));
+                        ag[n].setIdAsesoria(rs.getString(3));
+                    }
+                }
+                System.out.println(ag[i-1].getId());
+                
+                rs.close();
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        return ag;
     }
 
     /**
      * @param idAsesoria 
      * @return
      */
-    public static AsesoriaGuardada buscarIdAsesoria(String idAsesoria) {
+    public static AsesoriaGuardada[] buscarIdAsesoria(String idAsesoria) {
         // TODO implement here
-        return null;
+        ResultSet rs;
+        AsesoriaGuardada[] ag = null;
+        
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "SELECT * FROM asesoriasGuardadas WHERE idAsesoria = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, idAsesoria);
+                
+                rs = ps.executeQuery();
+                int i = 0;
+                while(rs.next()){
+                    i++;
+                }
+                //Instanciamos el array con la longitud que hay
+                ag = new AsesoriaGuardada[i];
+                
+                for(int n = 0; n < i; n++){
+                    if(rs.previous()){
+                        ag[n] = new AsesoriaGuardada(rs.getString(1));
+                        ag[n].setIdUsuario(rs.getString(2));
+                        ag[n].setIdAsesoria(rs.getString(3));
+                    }
+                }
+                System.out.println(ag[i-1].getId());
+                
+                rs.close();
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        return ag;
     }
 
     /**

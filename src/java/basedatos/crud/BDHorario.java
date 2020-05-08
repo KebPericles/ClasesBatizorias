@@ -22,9 +22,53 @@ public class BDHorario implements BD {
      * @param idAsesoria 
      * @return
      */
-    public static Horario buscarIdAsesoria(String idAsesoria) {
+    public static Horario[] buscarIdAsesoria(String idAsesoria) {
         // TODO implement here
-        return null;
+        ResultSet rs;
+        Horario[] h = null;
+        
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "SELECT * FROM horarios WHERE idAsesoria = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, idAsesoria);
+                
+                rs = ps.executeQuery();
+                int i = 0;
+                while(rs.next()){
+                    i++;
+                }
+                //Instanciamos el array con la longitud que hay
+                h = new Horario[i];
+                
+                for(int n = 0; n < i; n++){
+                    if(rs.previous()){
+                        h[n] = new Horario(rs.getString(1));
+                        h[n].setIdAsesoria(rs.getString(2));
+                        h[n].setHoraInicio(rs.getTime(3).getHours());
+                        h[n].setMinutoInicio(rs.getTime(3).getMinutes());
+                        h[n].setDias(rs.getString(4));
+                        h[n].setDuracion(rs.getShort(5));
+                    }
+                }                
+                rs.close();
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        return h;
     }
 
     /**
