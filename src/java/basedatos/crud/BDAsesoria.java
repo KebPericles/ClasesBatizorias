@@ -2,9 +2,11 @@ package basedatos.crud;
 
 import basedatos.conexion.Conexion;
 import basedatos.entidades.Asesoria;
+import basedatos.entidades.Municipio;
 import basedatos.entidades.Registro;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -90,7 +92,41 @@ public class BDAsesoria implements BD {
     @Override
     public Registro buscarId(String id) {
         // TODO implement here
-        return null;
+        ResultSet rs;
+        Asesoria a = null;
+        
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "SELECT * FROM asesorias WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, id);
+                
+                rs = ps.executeQuery();
+                
+                if(rs.next()){
+                    a = new Asesoria(rs.getString(1));
+                    a.setIdUsuario(rs.getString(2));
+                    a.setIdMateria(rs.getByte(3));
+                    a.setCosto(rs.getString(4));
+                }
+                rs.close();
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        return a;
     }
 
     /**

@@ -2,10 +2,13 @@ package basedatos.crud;
 
 import basedatos.conexion.Conexion;
 import basedatos.entidades.Horario;
+import basedatos.entidades.Municipio;
 import basedatos.entidades.Registro;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 /**
  * 
  */
@@ -81,7 +84,43 @@ public class BDHorario implements BD {
     @Override
     public Registro buscarId(String id) {
         // TODO implement here
-        return null;
+        ResultSet rs;
+        Horario h = null;
+        
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "SELECT * FROM horarios WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, id);
+                
+                rs = ps.executeQuery();
+                
+                if(rs.next()){
+                    h = new Horario(rs.getString(1));
+                    h.setIdAsesoria(rs.getString(2));
+                    h.setHoraInicio(rs.getTime(3).getHours());
+                    h.setMinutoInicio(rs.getTime(3).getMinutes());
+                    h.setDias(rs.getString(4));
+                    h.setDuracion(rs.getShort(5));
+                }
+                rs.close();
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        return h;
     }
 
     /**

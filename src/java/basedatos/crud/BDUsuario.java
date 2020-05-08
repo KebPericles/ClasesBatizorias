@@ -1,10 +1,12 @@
 package basedatos.crud;
 
 import basedatos.conexion.Conexion;
+import basedatos.entidades.Municipio;
 import basedatos.entidades.Registro;
 import basedatos.entidades.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -107,7 +109,51 @@ public class BDUsuario implements BD {
     @Override
     public Registro buscarId(String id) {
         // TODO implement here
-        return null;
+        ResultSet rs;
+        Usuario u = null;
+        
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "SELECT * FROM usuarios WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, id);
+                
+                rs = ps.executeQuery();
+                
+                if(rs.next()){
+                    u = new Usuario(rs.getString(1));
+                    u.setNick(rs.getString(2));
+                    u.setClave(rs.getString(3));
+                    u.setTipoUsuario(rs.getByte(4));
+                    u.setCorreo(rs.getString(5));
+                    u.setNombre(rs.getString(6));
+                    u.setApPat(rs.getString(7));
+                    u.setApMat(rs.getString(8));
+                    u.setfNac(rs.getDate(9));
+                    u.setIdMunicipio(rs.getString(10));
+                    u.setGenero(rs.getString(11).charAt(0));
+                    u.setSemestre(rs.getByte(12));
+                    u.setTelefono(rs.getBoolean(13));
+                    u.setCorreoVisible(rs.getBoolean(14));
+                }
+                rs.close();
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        return u;
     }
 
     /**

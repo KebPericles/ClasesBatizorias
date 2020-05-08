@@ -35,7 +35,7 @@ public class Horario extends Registro {
         return horaInicio;
     }
 
-    public void setHorarioInicio(int horaInicio) {
+    public void setHoraInicio(int horaInicio) {
         this.horaInicio = horaInicio;
     }
 
