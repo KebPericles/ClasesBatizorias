@@ -2,7 +2,6 @@ package basedatos.crud;
 
 import basedatos.conexion.Conexion;
 import basedatos.entidades.AsesoriaGuardada;
-import basedatos.entidades.Municipio;
 import basedatos.entidades.Registro;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

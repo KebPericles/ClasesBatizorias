@@ -1,7 +1,6 @@
 package basedatos.crud;
 
 import basedatos.conexion.Conexion;
-import basedatos.entidades.Municipio;
 import basedatos.entidades.Registro;
 import basedatos.entidades.Usuario;
 import java.sql.Connection;

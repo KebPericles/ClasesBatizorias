@@ -2,13 +2,11 @@ package basedatos.crud;
 
 import basedatos.conexion.Conexion;
 import basedatos.entidades.Horario;
-import basedatos.entidades.Municipio;
 import basedatos.entidades.Registro;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 /**
  * 
  */
