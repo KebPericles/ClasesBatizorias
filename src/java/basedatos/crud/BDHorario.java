@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 /**
  * 
  */
@@ -172,6 +173,42 @@ public class BDHorario implements BD {
     @Override
     public boolean modificar(Registro registroModificado) {
         // TODO implement here
+        Horario h = (Horario)registroModificado;
+        
+        if(h == null){
+            return false;
+        }
+        
+        String id = h.getId();
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "UPDATE horarios SET horaInicio = ?, dias = ?, duracion = ? WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables
+                ps.setTime(1, new java.sql.Time(h.getHoraInicio(),h.getMinutoInicio(),0));
+                ps.setString(2, h.getDias());
+                ps.setShort(3, h.getDuracion());
+                ps.setString(4, id);
+                
+                ps.executeUpdate();
+                
+                ps.close();
+                conBD.close();
+                return true;
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
         return false;
     }
 

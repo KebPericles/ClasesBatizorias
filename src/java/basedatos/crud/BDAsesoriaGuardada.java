@@ -218,7 +218,8 @@ public class BDAsesoriaGuardada implements BD {
      */
     @Override
     public boolean modificar(Registro registroModificado) {
-        // TODO implement here
+        // No hay implementacion porque no puedes modificar una asesoria guardada,
+        // solo la puedes borrar
         return false;
     }
 

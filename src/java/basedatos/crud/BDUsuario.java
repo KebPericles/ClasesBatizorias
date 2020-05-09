@@ -308,6 +308,50 @@ public class BDUsuario implements BD {
     @Override
     public boolean modificar(Registro registroModificado) {
         // TODO implement here
+        Usuario u = (Usuario) registroModificado;
+        String id = u.getId();
+        
+        try{
+            Connection conBD = Conexion.conectarBD();
+            String q = "UPDATE usuarios SET nick = ?, clave = ?, tipoUsuario = ?, correo = ?, nombre = ?,"
+                    + "apPat = ?, apMat = ?, idMunicipio = ?, genero = ?,"
+                    + "semestre = ?, telefono = ?, correoVisible = ? "
+                    + "WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                ps.setString(1, u.getNick());
+                ps.setString(2, u.getClave());
+                ps.setByte(3, u.getTipoUsuario());
+                ps.setString(4, u.getCorreo());
+                ps.setString(5, u.getNombre());
+                ps.setString(6, u.getApPat());
+                ps.setString(7, u.getApMat());
+                ps.setShort(8, Short.valueOf(u.getIdMunicipio()));
+                ps.setString(9, String.valueOf(u.getGenero()));
+                ps.setByte(10,u.getSemestre());
+                ps.setBoolean(11, u.isTelefono());
+                ps.setBoolean(12, u.isCorreoVisible());
+                ps.setString(13,id);
+                
+                ps.executeUpdate();
+                
+                ps.close();
+                conBD.close();
+                return true;
+            }catch(NumberFormatException | SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        
         return false;
     }
 
