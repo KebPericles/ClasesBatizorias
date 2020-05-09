@@ -117,6 +117,41 @@ public class BDMunicipio implements BD {
     @Override
     public boolean modificar(Registro registroModificado) {
         // TODO implement here
+        Municipio m = (Municipio)registroModificado;
+        
+        if(m == null){
+            return false;
+        }
+        
+        String id = m.getId();
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "UPDATE municipios SET nombre = ?,estado = ? WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables
+                ps.setString(1, m.getNombre());
+                ps.setString(2, m.getEstado());
+                ps.setString(3, id);
+                
+                ps.executeUpdate();
+                
+                ps.close();
+                conBD.close();
+                return true;
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
         return false;
     }
 
