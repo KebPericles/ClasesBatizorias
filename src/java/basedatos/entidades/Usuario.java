@@ -20,19 +20,19 @@ public class Usuario extends Registro {
     /**
      * 
      */
-    private String nick;
-    private String clave;
-    private byte tipoUsuario;
-    private String correo;
-    private String nombre;
-    private String apPat;
-    private String apMat;
-    private Date fNac;
-    private String idMunicipio;
-    private char genero;
-    private byte semestre;
-    private boolean telefono;
-    private boolean correoVisible;
+    private String nick = null;
+    private String clave = null;
+    private byte tipoUsuario = 0;
+    private String correo = null;
+    private String nombre = null;
+    private String apPat = null;
+    private String apMat= null;
+    private Date fNac= null;
+    private String idMunicipio= null;
+    private char genero = ' ';
+    private byte semestre= 0;
+    private boolean telefono = false;
+    private boolean correoVisible = false;
 
     public String getNick() {
         return nick;

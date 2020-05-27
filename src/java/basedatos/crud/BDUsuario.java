@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
  * 
@@ -204,26 +205,40 @@ public class BDUsuario implements BD {
         
         try{
             Connection conBD = Conexion.conectarBD();
-            String q = "INSERT INTO usuarios (nick, clave,tipoUsuario,correo,nombre,apPat,"
+            String q = "INSERT INTO batizorias.usuarios (nick, clave,tipoUsuario,correo,nombre,apPat,"
                     + "apMat,fNac,idMunicipio,genero,semestre,telefono, correoVisible) "
                     + "VALUES (?,?,?,?,?,?,?,?,?,?, ?, ?, ?)";
             //                 1 2 3 4 5 6 7 8 9 10 11 12 13
             PreparedStatement ps = conBD.prepareStatement(q);
-            
+            System.out.println("Preparacion terminada");
             try{
+                System.out.println("Empiezan los setters");
                 ps.setString(1, u.getNick());
+                System.out.println("1");
                 ps.setString(2, u.getClave());
+                System.out.println("2");
                 ps.setByte(3, u.getTipoUsuario());
+                System.out.println("3");
                 ps.setString(4, u.getCorreo());
+                System.out.println("4");
                 ps.setString(5, u.getNombre());
+                System.out.println("5");
                 ps.setString(6, u.getApPat());
+                System.out.println("6");
                 ps.setString(7, u.getApMat());
+                System.out.println("7");
                 ps.setDate(8, new java.sql.Date(u.getfNac().getTime()));
+                System.out.println("8");
                 ps.setShort(9, Short.valueOf(u.getIdMunicipio()));
+                System.out.println("9");
                 ps.setString(10, String.valueOf(u.getGenero()));
+                System.out.println("10");
                 ps.setByte(11,u.getSemestre());
+                System.out.println("11");
                 ps.setBoolean(12, u.isTelefono());
+                System.out.println("12");
                 ps.setBoolean(13, u.isCorreoVisible());
+                System.out.println("13");
                 
                 ps.executeUpdate();
                 
@@ -232,7 +247,7 @@ public class BDUsuario implements BD {
                 return true;
             }catch(NumberFormatException | SQLException es){
                 System.out.println(es.getMessage());
-                System.out.println(es.getStackTrace());
+                System.out.println(Arrays.toString(es.getStackTrace()));
 
             }finally{
                 ps.close();
@@ -241,7 +256,7 @@ public class BDUsuario implements BD {
             
         }catch(Exception e){
             System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         
         return false;

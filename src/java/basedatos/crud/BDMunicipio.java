@@ -162,7 +162,39 @@ public class BDMunicipio implements BD {
     @Override
     public boolean borrar(String id) {
         // TODO implement here
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "DELETE FROM municipios WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, id);
+                
+                ps.executeUpdate();
+                q = "SELECT * FROM municipios WHERE id = ?";
+                ps = conBD.prepareStatement(q);
+                ps.setString(1, id);
+                boolean tr = ps.executeQuery().next();
+                
+                ps.close();
+                conBD.close(); 
+                //retornamos operacion con exito
+                return tr;
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+        
         return false;
     }
-
 }
