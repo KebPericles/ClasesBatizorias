@@ -7,7 +7,6 @@
 import basedatos.crud.BDUsuario;
 import basedatos.entidades.Usuario;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,21 +32,16 @@ public class login extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        BDUsuario bdu = new BDUsuario();        
-
-        System.out.println(request.getParameter("nick"));
+        BDUsuario bdu = new BDUsuario();
 
         if(!request.getParameter("nick").equalsIgnoreCase("")){
-
-            System.out.println("Entramos al login");
             Usuario u = bdu.buscarNick(request.getParameter("nick"));
-            System.out.println(u.getId());
 
             try{
                 if(u.getClave().equals(request.getParameter("clave"))){
                     HttpSession s = request.getSession();
                     
-                    if(!(request.getParameter("recuerdame") == null)){
+                    if( !( request.getParameter("recuerdame") == null) ){
                         
                         if (((String)request.getParameter("recuerdame")).equals("on")) {
                             
@@ -55,7 +49,8 @@ public class login extends HttpServlet {
                             s.setAttribute("sesionIniciada", true);
                             s.setAttribute("idUsuario", u.getId());
                             s.setAttribute("tipoUsuario", u.getTipoUsuario());
-
+                            s.setAttribute("nombreUsuario", u.getNick());
+                            
                             s.setMaxInactiveInterval(0);
                         }
                         
@@ -63,13 +58,14 @@ public class login extends HttpServlet {
                         s.setAttribute("sesionIniciada", true);
                         s.setAttribute("idUsuario", u.getId());
                         s.setAttribute("tipoUsuario", u.getTipoUsuario());
+                        s.setAttribute("nombreUsuario", u.getNick());
                         
                         s.setMaxInactiveInterval(1500);
                     }
 
                     if(u.getTipoUsuario()==1){
                         response.sendRedirect("asesores.jsp");
-                    }else if(u.getTipoUsuario()==2){
+                    }else if(u.getTipoUsuario()==0){
                         response.sendRedirect("alumnos.jsp");
                     }else {
                         response.sendRedirect("login.jsp");

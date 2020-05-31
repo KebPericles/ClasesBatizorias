@@ -1,11 +1,8 @@
-<%@page import="basedatos.crud.BDPermisoMateria"%>
-<%@page import="basedatos.entidades.PermisoMateria"%>
-<%@page import="basedatos.entidades.Materia"%>
-<%@page import="basedatos.crud.BDMateria"%>
-<%@page import="basedatos.entidades.Asesoria"%>
-<%@page import="basedatos.crud.BDAsesoria"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="basedatos.conexion.Conexion"%>
 <!DOCTYPE html>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="es">
 
 <head>
@@ -27,6 +24,7 @@
 
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -182,91 +180,103 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <%
-                                int contador = 0;
-                                try{
-                                    Materia[] materias = BDMateria.todasMaterias();
-                                    PermisoMateria[] pMaterias = BDPermisoMateria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
-
-
-                                    for (int i = 0; i < materias.length; i++) {                        
-                                        for (int j = 0; j < pMaterias.length; j++) {
-                                            if (materias[i].getId().equals(pMaterias[j].getIdMateria())) {
-                                                contador++;
-                                            }
-                                        }
-                                    }
-                                }catch(Exception e){}
-                                if(contador > 0){
-                            %>
-                            <h2 class="m-0 font-weight-bold text-primary">Horarios</h2>
+                            <h6 class="m-0 font-weight-bold text-primary">Horarios</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <tr>
-                                        <td width="100%">
-                                            
-                                            <form method="POST" action="guardar.jsp">
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-md-8">
-                                                            <b>
-                                                                Unidad de aprendizaje
-                                                            </b>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <b>
-                                                                Costo por hora
-                                                            </b>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-8">
-                                                            <select id="materia" name="materia" >
-                                                                <option value="0">Selecciona una opción</option>
-                                                                <%
-                                                                    Materia[] materias = BDMateria.todasMaterias();
-                                                                    PermisoMateria[] pMaterias = BDPermisoMateria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
-                                                                    
-                                                                    for (int i = 0; i < materias.length; i++) {
-                                                                        
-                                                                        
-                                                                        for (int j = 0; j < pMaterias.length; j++) {
-                                                                            if (materias[i].getId().equals(pMaterias[j].getIdMateria())) {
-                                                                                
-                                                                                String nM = materias[i].getNombre();    
-                                                                                
-                                                                                nM = String.valueOf(Character.toUpperCase(nM.charAt(0))) + nM.substring(1);
-                                                                            %>  
-                                                                            <option value="<%=nM%>"><%=nM%></option>
-                                                                            <%
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                %>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <input class="btn btn-danger" type="reset" value="Borrar Datos" >
-                                                    <input class="btn btn-dark" type="submit" value="Agregar asesoria" >
-                                                </div>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>num asesoria</th>
+                                            <th>hora inicio</th>
+                                            <th>Dias</th>
+                                            <th>duracion</th>
+                                            <th>añadir horario</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>num asesoria</th>
+                                            <th>hora inicio</th>
+                                            <th>Dias</th>
+                                            <th>duracion</th>
+                                            <th>añadir horario</th>
+
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        <%  //vamos a conectarnos con la BD
+                    Connection con = Conexion.conectarBD();
+                    Statement st = null;
+                    ResultSet rs = null;
+                    try{
+                        //users es la bd,  user es el usuario root 
+                        int i = 1;
+                        st = con.createStatement();
+                        String q = "Select * from horarios";
+                        rs = st.executeQuery(q);
+                        //y asi como le hicimos con lo demas hay que recorrer la tabla con un while
+                        while(rs.next()){
+                            //y vamos a hacer que se imprima directo en la tabla
+                            if(true){
+                 %>
+                 
+                 <tr>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" ><%=rs.getInt("idAsesoria") %> 
+                         
+                     </td>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" ><%=rs.getTime("horaInicio") %> 
+                     </td>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" >
+                         <a href="editar.jsp">  <%=rs.getString("dias") %> </a> 
+                         
+                     </td>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" >
+                         <a href="borrar.jsp">  <%=rs.getInt("duracion") %> </a> 
+                         
+                     </td>
+                 </tr>
+                 
+                 <% 
+                        }else{// aqui va el else %>
+                         
+                 <tr>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" ><%=rs.getInt("idAsesoria")%> 
+                         
+                     </td>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" ><%=rs.getTime("horaInicio")%> 
+                     </td>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" >
+                         <a href="editar.jsp">  <%=rs.getString("dias")%> </a> 
+                         
+                     </td>
+                     <td bgColor="lightgreen" valign="top" width="80" height="19" >
+                         <a href="borrar.jsp">  <%=rs.getInt("duracion") %> </a> 
+                         
+                     </td>
+                 </tr>
+                        
+                <%         }
+                     i++;
+                    //este es de mi whiel
+                        }
+                        
+                        rs.close();
+                        st.close();
+                        con.close();
+                    }catch(Exception e){
+                        System.out.println("Si aqui no sirve sout T_T");
+                        System.out.println(e.getMessage());
+                        System.out.println(e.getStackTrace());
+                    }
+                
+                %>
+                 
+                
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                        <%
-                            }else{
-                        %>
-                            <h3>
-                                Aún no cuenta con permiso aprobado por nosotros para crear asesorias de alguna materia
-                            </h3>
-                    </div>
-                        <%
-                            }
-                        %>
                     </div>
 
                 </div>
@@ -303,7 +313,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">Ã</span>
+            <span aria-hidden="true">×</span>
           </button>
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>

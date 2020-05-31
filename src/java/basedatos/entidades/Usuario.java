@@ -33,6 +33,8 @@ public class Usuario extends Registro {
     private byte semestre= 0;
     private boolean telefono = false;
     private boolean correoVisible = false;
+    private String municipio = null;
+    private String estado = null;
 
     public String getNick() {
         return nick;
@@ -136,6 +138,22 @@ public class Usuario extends Registro {
 
     public void setCorreoVisible(boolean correoVisible) {
         this.correoVisible = correoVisible;
+    }
+
+    public String getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(String municipio) {
+        this.municipio = municipio;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
 }

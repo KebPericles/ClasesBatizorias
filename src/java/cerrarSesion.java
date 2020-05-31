@@ -32,7 +32,8 @@ public class cerrarSesion extends HttpServlet {
         try{
             request.getSession().invalidate();
         }catch (Exception e){
-            response.sendRedirect("index.html");
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
         }
         response.sendRedirect("index.html");
     }

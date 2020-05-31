@@ -89,7 +89,7 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="catalogoasesorias.html">
+                <a class="nav-link" href="buscarAsesorias.jsp">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Buscar Asesorias</span></a>
             </li>

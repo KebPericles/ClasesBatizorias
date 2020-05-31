@@ -46,7 +46,7 @@ public class BDAsesoriaGuardada implements BD {
                 //Instanciamos el array con la longitud que hay
                 ag = new AsesoriaGuardada[i];
                 
-                for(int n = 0; n < i; n++){
+                for(int n = 0; n < ag.length; n++){
                     if(rs.previous()){
                         ag[n] = new AsesoriaGuardada(rs.getString(1));
                         ag[n].setIdUsuario(rs.getString(2));

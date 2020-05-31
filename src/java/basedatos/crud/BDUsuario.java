@@ -1,6 +1,7 @@
 package basedatos.crud;
 
 import basedatos.conexion.Conexion;
+import basedatos.entidades.Municipio;
 import basedatos.entidades.Registro;
 import basedatos.entidades.Usuario;
 import java.sql.Connection;
@@ -32,7 +33,7 @@ public class BDUsuario implements BD {
         try{
             //Conectar a la bd
             Connection conBD = Conexion.conectarBD();
-            String q = "SELECT * FROM usuarios WHERE nick = ?";
+            String q = "SELECT * FROM usuarios WHERE nick = ?"; //Condicion del nick para buscar solo el que se requiere
             PreparedStatement ps = conBD.prepareStatement(q);
             
             try{
@@ -56,6 +57,8 @@ public class BDUsuario implements BD {
                     u.setSemestre(rs.getByte(12));
                     u.setTelefono(rs.getBoolean(13));
                     u.setCorreoVisible(rs.getBoolean(14));
+                    Municipio m = (Municipio)new BDMunicipio().buscarId(u.getIdMunicipio());
+                    u.setMunicipio(m.getNombre());
                 }
                 rs.close();
             }catch(SQLException es){
@@ -68,7 +71,7 @@ public class BDUsuario implements BD {
             
         }catch(Exception e){
             System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return u;
     }

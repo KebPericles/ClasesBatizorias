@@ -5,28 +5,23 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <!DOCTYPE html>
+<%
+    try{
+        if (!session.isNew() && (Boolean)session.getAttribute("sesionIniciada") && ((byte)session.getAttribute("tipoUsuario")) >= 0) {
+            switch((byte)session.getAttribute("tipoUsuario")){
+                case 0:
+                    response.sendRedirect("alumnos.jsp");
+                    break;
+                case 1:
+                    response.sendRedirect("asesores.jsp");
+                    break;
+            }
+        }else if (session.isNew()) {
+            session.invalidate();
+%>      
+        
 <html>
     <head>
-    <%
-    try{
-        if (!session.isNew() && (Boolean)session.getAttribute("sesionIniciada") && ((byte)session.getAttribute("tipoUsuario")) > 0) {
-            System.out.println(session.isNew());
-    %>  <script>
-            window.location.href =<%
-                System.out.println("Aqui esta el error");
-                if((byte)session.getAttribute("tipoUsuario") == 1){%> "asesores.jsp"<%
-                }else if((byte)session.getAttribute("tipoUsuario") == 2){
-                %> "alumnos.jsp"<%
-                }
-                %>;
-        </script>
-                <%
-        }else{
-            if (session.isNew()) {
-                    session.invalidate();
-                }
-        %>        
-        
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

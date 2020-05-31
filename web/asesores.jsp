@@ -12,11 +12,7 @@
 <!DOCTYPE html>
 <%
     try{
-        if (!(Boolean)session.getAttribute("sesionIniciada")) {
-            
-            response.sendRedirect("index.html");
-            
-        }else{
+        if (!session.isNew() && (Boolean)session.getAttribute("sesionIniciada") && ((byte)session.getAttribute("tipoUsuario")) == 1) {
 %>
 <html>
     <head>
@@ -75,7 +71,7 @@
     <div>
         <div><br><br>pagina para asesores</div>
         <div>
-            <a href="permisoMateria.jsp">Asesorias</a>
+            <a href="permisoMateria.jsp">Permisos de materias</a>
             <a href="crearAsesoria.jsp">Crear asesoria</a>
             
             <div>
@@ -121,9 +117,11 @@
     </body>
 </html>
 <%
+        }else{
+            response.sendRedirect("index.html");
         }
     }catch(Exception e){
-System.out.println("Porque");
+        System.out.println("Porque");
         System.out.println(e.getMessage());
         response.sendRedirect("index.html");
     }
