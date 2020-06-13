@@ -4,6 +4,8 @@
     Author     : Keb
 --%>
 
+<%@page import="basedatos.crud.BDUsuario"%>
+<%@page import="basedatos.entidades.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     try{
@@ -11,6 +13,8 @@
             if (!(Boolean)session.getAttribute("sesionIniciada")) {
                 response.sendRedirect("index.html");
             }else{
+                Usuario u = (Usuario)new BDUsuario().buscarId((String)session.getAttribute("idUsuario"));
+                String nombre = u.getNombre()+" "+u.getApPat()+" "+u.getApMat();
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -27,7 +31,7 @@
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="css/fonts.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
@@ -46,7 +50,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="alumnos.jsp">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-atom"></i>
                 </div>
@@ -254,7 +258,7 @@
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Luis García</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><%=nombre%></span>
                                 <i class="fas fa-user-circle"></i>
                             </a>
                             <!-- Dropdown - User Information -->
@@ -265,7 +269,7 @@
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Logout
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Cerrar sesión
                                 </a>
                             </div>
                         </li>
@@ -295,8 +299,8 @@
                                             <th>Asesor</th>
                                             <th>Correo</th>
                                             <th>Materia</th>
-                                            <th>Municipio</th>
-                                            <th>Calificación</th>
+
+                                            <th>Costo</th>
                                             <th>Solicitar</th>
                                         </tr>
                                     </thead>
@@ -305,8 +309,8 @@
                                             <th>Asesor</th>
                                             <th>Correo</th>
                                             <th>Materia</th>
-                                            <th>Municipio</th>
-                                            <th>Calificación</th>
+                                            
+                                            <th>Costo</th>
                                             <th>Solicitar</th>
                                         </tr>
                                     </tfoot>
@@ -315,9 +319,13 @@
                                             <td>Angel</td>
                                             <td>joseAng258@gmail.com</td>
                                             <td>Algebra</td>
-                                            <td>Venustiano Carranza</td>
-                                            <td>8.5</td>
-                                            <td><button class="btn btn-success">Solicitar</button></td>
+                                            
+                                            <td>$70</td>
+                                            <td>
+                                                <form method="POST" action="guardarAsesoria">
+                                                    <input class="btn btn-success" type="submit" value="Guardar">
+                                                </form>
+                                            </td>                                            
                                         </tr>
 
                                     </tbody>
@@ -366,7 +374,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="logout.jsp">Cerrar sesión</a>
                 </div>
             </div>
         </div>
@@ -383,7 +391,7 @@
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    
     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->

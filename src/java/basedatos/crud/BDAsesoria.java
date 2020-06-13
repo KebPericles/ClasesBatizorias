@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
  * 
@@ -60,7 +61,7 @@ public class BDAsesoria implements BD {
                 rs.close();
             }catch(SQLException es){
                 System.out.println(es.getMessage());
-                System.out.println(es.getStackTrace());
+                System.out.println(Arrays.toString(es.getStackTrace()));
             }finally{
                 ps.close();
                 conBD.close();
@@ -68,7 +69,7 @@ public class BDAsesoria implements BD {
             
         }catch(Exception e){
             System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return a;
     }
@@ -110,14 +111,14 @@ public class BDAsesoria implements BD {
                 rs.close();
             }catch(SQLException es){
                 System.out.println(es.getMessage());
-                System.out.println(es.getStackTrace());
+                System.out.println(Arrays.toString(es.getStackTrace()));
             }finally{
                 ps.close();
                 conBD.close();
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return a;
     }
@@ -156,7 +157,7 @@ public class BDAsesoria implements BD {
                 return true;
             }catch(SQLException es){
                 System.out.println(es.getMessage());
-                System.out.println(es.getStackTrace());
+                System.out.println(Arrays.toString(es.getStackTrace()));
             }finally{
                 ps.close();
                 conBD.close();
@@ -164,7 +165,7 @@ public class BDAsesoria implements BD {
             
         }catch(Exception e){
             System.out.println(e.getMessage());
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return false;
     }

@@ -12,6 +12,14 @@
         <servlet-name>cerrarSesion</servlet-name>
         <servlet-class>cerrarSesion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>guardarAsesoria</servlet-name>
+        <servlet-class>guardarAsesoria</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>eliminarAsesoriaGuardada</servlet-name>
+        <servlet-class>eliminarAsesoriaGuardada</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>registrarUsuario</servlet-name>
         <url-pattern>/registrarUsuario</url-pattern>
@@ -23,6 +31,14 @@
     <servlet-mapping>
         <servlet-name>cerrarSesion</servlet-name>
         <url-pattern>/cerrarSesion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>guardarAsesoria</servlet-name>
+        <url-pattern>/guardarAsesoria</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>eliminarAsesoriaGuardada</servlet-name>
+        <url-pattern>/eliminarAsesoriaGuardada</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

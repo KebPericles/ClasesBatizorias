@@ -1,3 +1,6 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="basedatos.crud.BDUsuario"%>
+<%@page import="basedatos.entidades.Usuario"%>
 <%@page import="basedatos.crud.BDPermisoMateria"%>
 <%@page import="basedatos.entidades.PermisoMateria"%>
 <%@page import="basedatos.entidades.Materia"%>
@@ -6,6 +9,16 @@
 <%@page import="basedatos.crud.BDAsesoria"%>
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    try{
+        if (!session.isNew() && (Boolean)session.getAttribute("sesionIniciada") && ((byte)session.getAttribute("tipoUsuario")) == 1) {
+            Usuario u = (Usuario)new BDUsuario().buscarId((String)session.getAttribute("idUsuario"));
+            
+            String nick = u.getNick();
+            String nombre = u.getNombre()+" "+u.getApPat()+" "+u.getApMat();
+            String correo = u.getCorreo();
+            String municipio = u.getMunicipio();
+%>
 <html lang="es">
 
 <head>
@@ -20,7 +33,7 @@
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="css/fonts.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
@@ -38,23 +51,12 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="asesores.jsp">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-atom"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">BATIZOR <sup>2.0</sup></div>
             </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>ACTIVIDAD</span></a>
-            </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -64,39 +66,77 @@
             <!-- Divider -->
             <!-- Heading -->
             <div class="sidebar-heading">
-                Addons
+                Asesorias
             </div>
+            <%
+                try{
+                    Materia[] materias = BDMateria.todasMaterias();
+                    PermisoMateria[] pMaterias = BDPermisoMateria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
 
+                    for (int i = 0; i < materias.length; i++) {                        
+                        for (int j = 0; j < pMaterias.length; j++) {
+                            if (materias[i].getId().equals(pMaterias[j].getIdMateria())) {
+            %>
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Mis Asesorias</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                        <%
+                                if (materias[i].getNombre().equalsIgnoreCase("Algebra")) {
+                        %>
+                        <form method="POST" action="misAsesorias.jsp">
+                            <input type="text" value="algebra" name="materia" hidden>
+                            <input type="submit" class="collapse-item btn" value="Algebra">
+                        </form>
+                        <%
+                                }
 
-                        <a class="collapse-item" href="blank.html">Algebra</a>
-                        <a class="collapse-item" href="blank.html">Trigo</a>
-                        <a class="collapse-item" href="blank.html">Analiitica</a>
+                                if (materias[i].getNombre().equalsIgnoreCase("Trigonometria")) {
+                        %>
+                        <form method="POST" action="misAsesorias.jsp">
+                            <input type="text" value="trigo" name="materia" hidden>
+                            <input type="submit" class="collapse-item btn" value="Trigonometría">
+                        </form>
+                        <%        
+                                }
 
+                                if(materias[i].getNombre().equalsIgnoreCase("Analitica")){
+                        %>
+                        <form method="POST" action="misAsesorias.jsp">
+                            <input type="text" value="analitica" name="materia" hidden>
+                            <input type="submit" class="collapse-item btn" value="Geometría analítica">
+                        </form>
+                        <%
+                                }
+                        %>
                     </div>
                 </div>
             </li>
-
-
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li>
-
+            <%
+                            }
+                        }
+                    }
+                }catch(Exception e){}
+            %>
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="buscarAsesorias.jsp">
+                <a class="nav-link" href="crearAsesoria.jsp">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Buscar Asesorias</span></a>
+                    <span>Crear asesoria</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+            
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="permisosMateria.jsp">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Permisos materia</span></a>
             </li>
 
             <!-- Divider -->
@@ -121,54 +161,33 @@
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-                    <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-                            </div>
-                        </div>
-                    </form>
+                        <i class="fa fa-bars"></i>
+                    </button>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                      </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-                        <!-- Nav Item - Alerts -->
-                            <!-- Dropdown - Alerts -->
-                            
+                        <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><%=nombre%></span>
+                                <i class="fas fa-user-circle"></i>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="user.jsp">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Perfil
+                                </a>
+
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Cerrar sesión
+                                </a>
                             </div>
                         </li>
-
                     </ul>
-
                 </nav>
                 <!-- End of Topbar -->
 
@@ -176,8 +195,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                    <p class="mb-4">tabla con los horarios</p>
+                    <h1 class="h3 mb-2 text-gray-800">Asesorías</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -197,64 +215,105 @@
                                         }
                                     }
                                 }catch(Exception e){}
+                                
                                 if(contador > 0){
                             %>
-                            <h2 class="m-0 font-weight-bold text-primary">Horarios</h2>
+                            <h2 class="m-0 font-weight-bold text-primary">Asesorías</h2>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <tr>
-                                        <td width="100%">
-                                            
-                                            <form method="POST" action="guardar.jsp">
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-md-8">
-                                                            <b>
-                                                                Unidad de aprendizaje
-                                                            </b>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <b>
-                                                                Costo por hora
-                                                            </b>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-8">
-                                                            <select id="materia" name="materia" >
-                                                                <option value="0">Selecciona una opción</option>
-                                                                <%
-                                                                    Materia[] materias = BDMateria.todasMaterias();
-                                                                    PermisoMateria[] pMaterias = BDPermisoMateria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
-                                                                    
-                                                                    for (int i = 0; i < materias.length; i++) {
-                                                                        
-                                                                        
-                                                                        for (int j = 0; j < pMaterias.length; j++) {
-                                                                            if (materias[i].getId().equals(pMaterias[j].getIdMateria())) {
-                                                                                
-                                                                                String nM = materias[i].getNombre();    
-                                                                                
-                                                                                nM = String.valueOf(Character.toUpperCase(nM.charAt(0))) + nM.substring(1);
-                                                                            %>  
-                                                                            <option value="<%=nM%>"><%=nM%></option>
-                                                                            <%
-                                                                            }
+                                
+                                    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <th>
+                                                <b>
+                                                    Unidad de aprendizaje
+                                                </b>
+                                            </th>       
+                                            <th>
+                                                <b>
+                                                    Costo por hora (MXN $)
+                                                </b>
+                                            </th>    
+                                            <th></th>
+                                            <th></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <form method="POST" action="guardar.jsp">
+                                                    <td>
+                                                        <select class="form-control" id="materiaasesoria" name="materiaAsesorias">
+                                                            <option value="0">Selecciona una opción</option>
+                                                            <%
+                                                                Materia[] materias = BDMateria.todasMaterias();
+                                                                PermisoMateria[] pMaterias = BDPermisoMateria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
+
+                                                                for (int i = 0; i < materias.length; i++) {
+
+
+                                                                    for (int j = 0; j < pMaterias.length; j++) {
+                                                                        if (materias[i].getId().equals(pMaterias[j].getIdMateria())) {
+
+                                                                            String nM = materias[i].getNombre();    
+
+                                                                            nM = String.valueOf(Character.toUpperCase(nM.charAt(0))) + nM.substring(1);
+                                                                        %>  
+                                                            <option value="<%=nM%>"><%=nM%></option>
+                                                                        <%
                                                                         }
                                                                     }
-                                                                %>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <input class="btn btn-danger" type="reset" value="Borrar Datos" >
-                                                    <input class="btn btn-dark" type="submit" value="Agregar asesoria" >
-                                                </div>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                </table>
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="input-group-text" id="txtCostoAsesoria" name="costoAsesoria" value="0">
+                                                        <input id="rangeCostoAsesoria" class="form-control-range align-content-center" type="range" value="0" min="0" max="1000">
+                                                    </td>
+                                                    <td>
+                                                        <input id="resetCrearAsesoria" class="btn btn-danger" type="reset" value="Valores por defecto">
+                                                    </td>
+                                                    <td>
+                                                        <input class="btn btn-dark" type="submit" value="Agregar asesoria">
+                                                    </td>
+                                                </form>
+                                            </tr>
+                                            <%
+                                                try{
+                                                    Asesoria[] as = BDAsesoria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
+                                                    if (as.length > 0) {
+                                                        for (int i = 0; i < as.length; i++) {
+                                                            String nombreMateria = BDMateria.nombreMateriaId(String.valueOf(as[i].getIdMateria()));
+                                                            String costo = as[i].getCosto();                
+                                            %>
+                                            <tr>
+                                                <td>
+                                                    <%=nombreMateria%>
+                                                </td>
+                                                <td>
+                                                    <%=costo%>
+                                                </td>
+                                                <td>
+                                                    <form method="POST" action="borrarAsesoria" class="form-inline">
+                                                        <input type="text" value="<%=as[i].getId()%>" hidden>
+                                                        <input type="submit" class="btn btn-danger" value="Eliminar">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="POST" action="agregarHorario" class="form-inline">
+                                                        <input type="text" value="<%=as[i].getId()%>" hidden>
+                                                        <input type="submit" class="btn btn-dark" value="Agregar horario">
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <%
+                                                        }
+                                                    }
+                                                }catch(Exception e){}
+                                            %>
+                                        </tbody>
+                                    </table>
+                                
                             </div>
                         </div>
                         <%
@@ -301,15 +360,15 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">¿Listo para irte?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">Ã</span>
+            <span aria-hidden="true">×</span>
           </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Presiona "Cerrar sesión" si quieres salir de la sesión actual.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="logout.jsp">Cerrar sesión</a>
                 </div>
             </div>
         </div>
@@ -326,12 +385,21 @@
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+    <script src="js/batizorias/inputs.js"></script>
 
 </body>
 
 </html>
+<%
+        }else if (session.isNew()){
+            session.invalidate();
+            response.sendRedirect("index.html");
+        }
+    }catch(Exception e){
+        response.sendRedirect("index.html");
+    }
+%>

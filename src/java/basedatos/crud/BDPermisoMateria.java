@@ -2,6 +2,7 @@ package basedatos.crud;
 
 import basedatos.conexion.Conexion;
 import basedatos.entidades.Asesoria;
+import basedatos.entidades.Municipio;
 import basedatos.entidades.PermisoMateria;
 import basedatos.entidades.Registro;
 import java.sql.Connection;
@@ -32,7 +33,7 @@ public class BDPermisoMateria implements BD {
         try{
             //Conectar a la bd
             Connection conBD = Conexion.conectarBD();
-            String q = "SELECT * FROM asesorias WHERE idUsuario = ?";
+            String q = "SELECT * FROM permisosMateria WHERE idUsuario = ?";
             PreparedStatement ps = conBD.prepareStatement(q);
             
             try{
@@ -53,8 +54,8 @@ public class BDPermisoMateria implements BD {
                 for(int n = 0; n < i; n++){
                     if(rs.previous()){
                         pm[n] = new PermisoMateria(rs.getString(1));
-                        pm[n].setIdMateria(rs.getString(2));
-                        pm[n].setIdUsuario(rs.getString(3));
+                        pm[n].setIdMateria(rs.getString("idMateria"));
+                        pm[n].setIdUsuario(rs.getString("idUsuario"));
                     }
                 }
                 rs.close();
@@ -100,6 +101,41 @@ public class BDPermisoMateria implements BD {
     @Override
     public boolean modificar(Registro registroModificado) {
         // TODO implement here
+        Municipio m = (Municipio)registroModificado;
+        
+        if(m == null){
+            return false;
+        }
+        
+        String id = m.getId();
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "UPDATE permisosMateria SET idMateria = ?, idUsuario = ? WHERE id = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables
+                ps.setString(1, m.getNombre());
+                ps.setString(2, m.getEstado());
+                ps.setString(3, id);
+                
+                ps.executeUpdate();
+                
+                ps.close();
+                conBD.close();
+                return true;
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(es.getStackTrace());
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
         return false;
     }
 

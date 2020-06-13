@@ -13,7 +13,7 @@
 
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="css/fonts.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
@@ -33,7 +33,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="asesores.jsp">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-atom"></i>
                 </div>
@@ -116,8 +116,8 @@
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
+                        <i class="fa fa-bars"></i>
+                    </button>
 
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -125,8 +125,8 @@
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -146,24 +146,14 @@
                                         <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                                         <div class="input-group-append">
                                             <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                      </button>
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </li>
-
-                        <!-- Nav Item - Alerts -->
-                            <!-- Dropdown - Alerts -->
-                            
-
-                        <!-- Nav Item - User Information -->
-                            </div>
-                        </li>
-
                     </ul>
-
                 </nav>
                 <!-- End of Topbar -->
 
@@ -171,80 +161,23 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                    <p class="mb-4">tabla con los horarios</p>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Horarios</h6>
-                        </div>
-                        <div class="card-body">
-                          <%  Connection con = null;
-        String url = "jdbc:mysql://localhost:3306/";
-        String user = "root";
-        String password = "n0m3l0";
-        String db = "batizorias";
-        int i=1;
-        String driver = "com.mysql.jdbc.Driver";
-        ResultSet rs = null;
-        try{
-            Class.forName(driver);
-            con = DriverManager.getConnection(url+db, user, password);
-            //si se dan cuenta pasamos los 3 parametros + el nombre de
-            //la BD ahora vamos a verificar que este bien
-            try{
-                Statement set = con.createStatement();
-                int nombre = Integer.parseInt(request.getParameter("unid_apren"));
-                //String nombre = request.getParameter("unid_apren");
-                //String ciudad = request.getParameter("ciudad");
-                //String telefono = request.getParameter("telefono");
-                String q = "Select * from asesorias";
-                rs = set.executeQuery(q);
-                
-                out.println(nombre);
-                //ahora si, esta seccion les va a servir para poder
-                //validar la entrada de los datos, y si lo tienen que hacer
-                //recuerden que solo la validacion en js no es suficiente :P
-                
-                while(rs.next()){
-                         i+=1;
-                        }
-                
-                
-                
-                //ahora vamos a meter el insert de una forma diferente XD
-                String sql = "insert into asesorias values ('"+i+"',1,'"+nombre+"' )";
-                int val = set.executeUpdate(sql);
-                //si todo esta "bien" tenemos que cerrar la conexion
-                con.close();
-            
-            }catch(SQLException ex){
-                out.println("No se conecto a la tabla");
-                out.println(ex.getMessage());
-                out.println(ex.getStackTrace());
-            
-            }
-            
-        }catch(Exception e){
-            out.println("No se conecto a Base");
-                out.println(e);
-                out.println(e.getStackTrace());
-            
-        
-        }
-        
-        
-    
-    %>
-        <h1>Muchas gracias por tu registro :3</h1>
-        <a href="index.html" >
-            Regresar al Menu
-        </a>
-        <br>
-        <a href="crear_as.jsp">
-            Insertar otro Registro
-        </a>
+                    <h1 class="h3 mb-2 text-gray-800">
+                        Tables
+                    </h1>
+                    <h1>
+                        Muchas gracias por tu registro :3
+                    </h1>
+                    <a href="asesores.jsp" >
+                        Regresar al Menu
+                    </a>
+                    <br>
+                    <a href="crear_as.jsp">
+                        Insertar otro Registro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     </body>
 
     <!-- Bootstrap core JavaScript-->

@@ -16,8 +16,7 @@
 <%
     try{
         if (!session.isNew() && (Boolean)session.getAttribute("sesionIniciada") && ((byte)session.getAttribute("tipoUsuario")) == 0) {
-            BDUsuario bdu = new BDUsuario();
-            Usuario u = (Usuario)bdu.buscarId((String)session.getAttribute("idUsuario"));
+            Usuario u = (Usuario)new BDUsuario().buscarId((String)session.getAttribute("idUsuario"));
             AsesoriaGuardada[] ag = BDAsesoriaGuardada.buscarIdUsuario(u.getId());
             byte cAsesoriasGuardadas = Byte.valueOf(String.valueOf(ag.length));
             
@@ -36,7 +35,7 @@
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="css/fonts.css" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
@@ -51,7 +50,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="alumnos.jsp">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-atom"></i>
                 </div>
@@ -259,7 +258,7 @@
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Luis García</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><%=nombre%></span>
                                 <i class="fas fa-user-circle"></i>
                             </a>
                             <!-- Dropdown - User Information -->
@@ -296,9 +295,10 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><%=correo%></div>
                                         </div>
                                         <div class="col mr-2">
+                                            <!--
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Municipio</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><%=municipio%></div> <br>
-
+-->
                                         </div>
 
                                         <div class="col-auto">
@@ -326,8 +326,8 @@
                                             <th>Asesor</th>
                                             <th>Correo</th>
                                             <th>Materia</th>
-                                            <th>Municipio</th>
-                                            <th>Calificación</th>
+                                            <!--<th>Municipio</th>-->
+                                            <th>Costo</th>
                                             <th>Eliminar</th>
                                         </tr>
                                     </thead>
@@ -340,6 +340,7 @@
                                                 String nombreAsesor = asesor.getNombre();
                                                 String materia = BDMateria.nombreMateriaId(String.valueOf(a.getIdMateria()));
                                                 String correoAsesor = asesor.getCorreo();
+                                                String costo = "$" + a.getCosto();
                                     %>
                                     
                                         
@@ -347,9 +348,14 @@
                                             <td><%=nombreAsesor%></td>
                                             <td><%=correoAsesor%></td>
                                             <td><%=materia%></td>
-                                            <td><%=municipio%></td>
-                                            <td></td>
-                                            <td><button class="btn btn-danger">Eliminar</button></td>
+                                            <!--<td><%--=municipio--%></td>-->
+                                            <td><%=costo%></td>
+                                            <td>
+                                                <form method="POST" action="eliminarAsesoriaGuardada">
+                                                    <input type="text" value="<%=ag[i].getId()%>" name="asesoria" hidden>
+                                                    <input type="submit" class="btn btn-danger" value="Eliminar">
+                                                </form>
+                                            </td>
                                         </tr>
                                         <%
                                                 }

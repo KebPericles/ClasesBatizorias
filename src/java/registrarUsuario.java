@@ -54,20 +54,21 @@ public class registrarUsuario extends HttpServlet {
                     r.setSemestre(Byte.valueOf("1"));
                     r.setGenero('N');
                     r.setIdMunicipio("1");
-                    byte tipo = -1;
+                    byte tipo = 7;
                     
-                    if (request.getParameter("tipo").equals("asesor")) {
+                    if ("asesor".equals(request.getParameter("tipo"))) {
                         tipo = 1;
                     }else if(request.getParameter("tipo").equals("alumno")){
-                        tipo = 2;
+                        tipo = 0;
                     }
+                    
+                    r.setTipoUsuario(tipo);
                     
                     if(tipo != -1){
                         boolean b = u.registrar(r);
                         
                         if(b){
-                            request.setAttribute("recordarme", true);
-                            request.getRequestDispatcher("login").forward(request, response);
+                            response.sendRedirect("login.jsp");
                         }else{
                             response.sendRedirect("register.html");
                         }
@@ -95,7 +96,7 @@ public class registrarUsuario extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("register.html");
+        processRequest(request, response);
     }
 
     /**

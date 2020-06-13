@@ -1,25 +1,22 @@
-<%@page import="basedatos.entidades.Horario"%>
-<%@page import="basedatos.crud.BDHorario"%>
+<%@page import="basedatos.crud.BDAsesoria"%>
+<%@page import="basedatos.crud.BDUsuario"%>
+<%@page import="basedatos.entidades.Usuario"%>
 <%@page import="basedatos.crud.BDPermisoMateria"%>
 <%@page import="basedatos.entidades.PermisoMateria"%>
-<%@page import="basedatos.entidades.Materia"%>
 <%@page import="basedatos.crud.BDMateria"%>
-<%@page import="basedatos.entidades.Asesoria"%>
-<%@page import="basedatos.crud.BDAsesoria"%>
-<%@page import="basedatos.crud.BDAsesoriaGuardada"%>
-<%@page import="basedatos.entidades.AsesoriaGuardada"%>
-<%@page import="basedatos.entidades.AsesoriaGuardada"%>
-<%@page import="basedatos.entidades.Municipio"%>
-<%@page import="basedatos.crud.BDMunicipio"%>
-<%@page import="basedatos.entidades.Usuario"%>
-<%@page import="basedatos.crud.BDUsuario"%>
+<%@page import="basedatos.entidades.Materia"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="basedatos.conexion.Conexion"%>
 <!DOCTYPE html>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     try{
         if (!session.isNew() && (Boolean)session.getAttribute("sesionIniciada") && ((byte)session.getAttribute("tipoUsuario")) == 1) {
+            if (BDAsesoria.buscarIdUsuario((String)session.getAttribute("idUsuario")).length>0) {
+            
             Usuario u = (Usuario)new BDUsuario().buscarId((String)session.getAttribute("idUsuario"));
-            Asesoria[] a = BDAsesoria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
             
             String nick = u.getNick();
             String nombre = u.getNombre()+" "+u.getApPat()+" "+u.getApMat();
@@ -29,20 +26,24 @@
 <html lang="es">
 
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Perfil</title>
+    <title>SB Admin 2 - Tables</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="css/fonts.css" rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -50,7 +51,7 @@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
-        
+
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -72,13 +73,7 @@
             <div class="sidebar-heading">
                 Asesorias
             </div>
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Mis Asesorias</span>
-                </a>
-                <%
+            <%
                 try{
                     Materia[] materias = BDMateria.todasMaterias();
                     PermisoMateria[] pMaterias = BDPermisoMateria.buscarIdUsuario((String)session.getAttribute("idUsuario"));
@@ -86,41 +81,59 @@
                     for (int i = 0; i < materias.length; i++) {                        
                         for (int j = 0; j < pMaterias.length; j++) {
                             if (materias[i].getId().equals(pMaterias[j].getIdMateria())) {
-                                String idMateria = materias[i].getId();
-                                String nombreMateria = materias[i].getNombre();
-                %>
+            %>
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Mis Asesorias</span>
+                </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                        <%
+                                if (materias[i].getNombre().equalsIgnoreCase("Algebra")) {
+                        %>
                         <form method="POST" action="misAsesorias.jsp">
-                            <input type="text" value="<%=idMateria+12%>" name="materia" hidden>
-                            <input type="submit" class="collapse-item btn" value="<%=nombreMateria%>">
+                            <input type="text" value="algebra" name="materia" hidden>
+                            <input type="submit" class="collapse-item btn" value="Algebra">
                         </form>
+                        <%
+                                }
+
+                                if (materias[i].getNombre().equalsIgnoreCase("Trigonometria")) {
+                        %>
+                        <form method="POST" action="misAsesorias.jsp">
+                            <input type="text" value="trigo" name="materia" hidden>
+                            <input type="submit" class="collapse-item btn" value="Trigonometría">
+                        </form>
+                        <%        
+                                }
+
+                                if(materias[i].getNombre().equalsIgnoreCase("Analitica")){
+                        %>
+                        <form method="POST" action="misAsesorias.jsp">
+                            <input type="text" value="analitica" name="materia" hidden>
+                            <input type="submit" class="collapse-item btn" value="Geometría analítica">
+                        </form>
+                        <%
+                                }
+                        %>
                     </div>
                 </div>
-                        <%
-                                break;
+            </li>
+            <%
                             }
                         }
                     }
                 }catch(Exception e){}
             %>
-            </li>
-            
             <!-- Nav Item - Tables -->
             <li class="nav-item">
                 <a class="nav-link" href="crearAsesoria.jsp">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Crear asesoria</span>
-                </a>
+                    <span>Crear asesoria</span></a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="crearAsesoria.jsp">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Agregar horario</span>
-                </a>
-            </li>
-            
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
             
@@ -156,18 +169,9 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <div class="input-group-append">
-
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
@@ -183,9 +187,8 @@
                                 </a>
 
                                 <div class="dropdown-divider"></div>
-                                
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Cerrar sesiÃ³n
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Cerrar sesión
                                 </a>
                             </div>
                         </li>
@@ -195,73 +198,73 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+
                     <!-- Page Heading -->
-                    <h1 class="h1 mb-6 text-gray-800"><%=nick%></h1>
-                    <div class="row">
-                        <div class="col-xl-12 col-md-12 mb-12">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Nombre</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%=nombre%></div> <br>
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Correo</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%=correo%></div>
-                                        </div>
-                                        <div class="col mr-2">
-                                            <!--
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Municipio</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%=municipio%></div> <br>
--->
-                                        </div>
+                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+                    <p class="mb-4">tabla con los horarios</p>
 
-                                        <div class="col-auto">
-                                            <i class="fas fa-user-astronaut fa-5x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-                        
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-success">Mis asesorias</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Horarios</h6>
                         </div>
-                        
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
-                                        <th>
-                                            Materia
-                                        </th>
-                                        <th>
-                                            Costo
-                                        </th>
-                                        <th>
-                                            Horarios
-                                        </th>
+                                        <th width="150" align="center">Num asesoria</th>
+                                        <th width="290" align="center">Unidad de aprendizaje</th>
                                     </thead>
                                     <tbody>
-                                        <%
-                                            for (int i = 0; i < a.length; i++) {
-                                                String materia = BDMateria.nombreMateriaId(String.valueOf(a[i].getIdMateria()));
-                                                String costo = a[i].getCosto();
-                                                Horario[] horarios = BDHorario.buscarIdAsesoria(a[i].getId());
-                                                System.out.println("Entramos");
-                                                System.out.println(horarios.length);
-                                                for (int j = 0; j < horarios.length; j++) {
-                                                    System.out.println("Entramos 2");
-                                                    horarios[j].getHoraInicio();
-                                                    horarios[j].getMinutoInicio();
-                                                    horarios[j].getDuracion();
-                                                    horarios[j].getDias();
-                                                    System.out.println(horarios[j].getDias());
-                                                }
-                                            }
-                                        %>
+                                    <%  //vamos a conectarnos con la BD
+                                        Connection con = null;
+                                        PreparedStatement st = null;
+                                        ResultSet rs = null;
+                                        try{
+                                            //users es la bd,  user es el usuario root 
+                                            int i = 1;
+                                            con = Conexion.conectarBD();
+
+                                            String q = "Select * from asesorias where idUsuario = ?";
+                                            st = con.prepareStatement(q);
+                                            st.setString(1, (String)session.getAttribute("idUsuario"));
+                                            rs = st.executeQuery();
+                                            //y asi como le hicimos con lo demas hay que recorrer la tabla con un while
+                                            while(rs.next()){
+                                                //y vamos a hacer que se imprima directo en la tabla
+                                     %>
+
+                                     <tr>
+                                         <td valign="top" width="80" height="19" ><%=rs.getString(1) %> 
+
+                                         </td>
+                                         <td valign="top" width="80" height="19" ><%=rs.getInt("idMateria") %> 
+                                         </td>
+                                         <td valign="top" width="80" height="19" >
+                                             <a href="editar.jsp">  <%=rs.getInt("id") %> </a> 
+
+                                         </td>
+                                         <td valign="top" width="80" height="19" >
+                                             <a href="borrar.jsp">  <%=rs.getInt("id") %> </a> 
+
+                                         </td>
+                                     </tr>
+                 
+<%
+                     i++;
+                    //este es de mi whiel
+                        }
+                        
+                        rs.close();
+                        st.close();
+                        con.close();
+                    }catch(Exception e){
+                        System.out.println("Si aqui no sirve sout T_T");
+                        System.out.println(e.getMessage());
+                        System.out.println(e.getStackTrace());
+                    }
+                
+%>
                                     </tbody>
                                 </table>
                             </div>
@@ -300,15 +303,15 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Â¿Listo para irte?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">¿Listo para irte?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">Ã—</span>
+            <span aria-hidden="true">×</span>
           </button>
                 </div>
-                <div class="modal-body">Presiona "Cerrar sesiÃ³n" si quieres salir de la sesiÃ³n actual.</div>
+                <div class="modal-body">Presiona "Cerrar sesión" si quieres salir de la sesión actual.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-primary" href="logout.jsp">Cerrar sesiÃ³n</a>
+                    <a class="btn btn-primary" href="logout.jsp">Cerrar sesión</a>
                 </div>
             </div>
         </div>
@@ -324,10 +327,18 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+
 </body>
 
 </html>
-<%
+<%          }else{
+                response.sendRedirect("asesores.jsp");
+            }
         }else if (session.isNew()){
             session.invalidate();
             response.sendRedirect("index.html");

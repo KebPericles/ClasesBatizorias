@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 /**
  * 
@@ -53,7 +54,6 @@ public class BDAsesoriaGuardada implements BD {
                         ag[n].setIdAsesoria(rs.getString(3));
                     }
                 }
-                System.out.println(ag[i-1].getId());
                 
                 rs.close();
             }catch(SQLException es){
@@ -227,10 +227,49 @@ public class BDAsesoriaGuardada implements BD {
      * @param id 
      * @return
      */
-    @Override
-    public boolean borrar(String id) {
+    public boolean borrar(String id, String idUsuario) {
         // TODO implement here
+        try{
+            //Conectar a la bd
+            Connection conBD = Conexion.conectarBD();
+            String q = "DELETE FROM asesoriasGuardadas WHERE id = ? AND idUsuario = ?";
+            PreparedStatement ps = conBD.prepareStatement(q);
+            
+            try{
+                //preparacion de las variables de 
+                ps.setString(1, id);
+                ps.setString(2, idUsuario);
+                
+                ps.executeUpdate();
+                q = "SELECT * FROM asesoriasGuardadas WHERE id = ? AND idUsuario = ?";
+                ps = conBD.prepareStatement(q);
+                ps.setString(1, id);
+                ps.setString(2, idUsuario);
+                boolean tr = !ps.executeQuery().next();
+                
+                ps.close();
+                conBD.close(); 
+                //retornamos operacion con exito
+                return tr;
+            }catch(SQLException es){
+                System.out.println(es.getMessage());
+                System.out.println(Arrays.toString(es.getStackTrace()));
+            }finally{
+                ps.close();
+                conBD.close();
+            }
+            
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
         return false;
     }
 
+    @Override
+    public boolean borrar(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 }
